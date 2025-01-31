@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Scoreboard</title>
+    <link rel="stylesheet" href="styles.css">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: linear-gradient(45deg, #ff6b6b, #6b6bff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px; /* Prevent content overflow on small screens */
+}
+
+.container {
+    width: 90%;
+    max-width: 500px; /* Limits max width for better readability */
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+h1 {
+    color: #ff4757;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+/* Team display styling */
+.team {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #ff9ff3, #ff6b6b);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.team span {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Button styling */
+button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.2s ease-in-out;
+}
+
+.increment {
+    background: #2ed573;
+    color: white;
+}
+
+.increment:hover {
+    background: #1eaa55;
+}
+
+.decrement {
+    background: #ff4757;
+    color: white;
+}
+
+.decrement:hover {
+    background: #e84142;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .team {
+        flex-direction: column;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .team span {
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        margin: 5px;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Team Scoreboard 🏆</h1>
+        <div id="teams-container"></div>
+    </div>
+    <script>
+// Team data
+let teams = Array.from({ length: 9 }, (_, i) => ({ id: i + 1, score: 0 }));
+
+// Function to update and render teams
+function updateTeams() {
+    // Sort teams in descending order of scores
+    teams.sort((a, b) => b.score - a.score);
+    
+    // Get container
+    const container = document.getElementById('teams-container');
+    container.innerHTML = "";
+
+    // Loop through sorted teams and create UI
+    teams.forEach(team => {
+        const teamDiv = document.createElement('div');
+        teamDiv.classList.add('team');
+        teamDiv.innerHTML = `
+            <span>Team ${team.id}</span>
+            <span>Score: ${team.score}</span>
+            <div>
+                <button class="increment" onclick="changeScore(${team.id}, 1)">➕</button>
+                <button class="decrement" onclick="changeScore(${team.id}, -1)">➖</button>
+            </div>
+        `;
+        container.appendChild(teamDiv);
+    });
+}
+
+// Function to change score
+function changeScore(id, change) {
+    const team = teams.find(team => team.id === id);
+    if (team) {
+        team.score += change;
+        updateTeams();
+    }
+}
+
+// Initial rendering
+updateTeams();
+</script>
+</body>
+</html>
