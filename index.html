@@ -1,9 +1,11 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Scoreboard</title>
+    <title>Squid Game Scoreboard</title>
     <link rel="stylesheet" href="styles.css">
 <style>
 * {
@@ -14,66 +16,86 @@
 }
 
 body {
-    background: linear-gradient(45deg, #ff6b6b, #6b6bff);
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    padding: 20px; /* Prevent content overflow on small screens */
+    padding: 20px;
 }
 
 .container {
     width: 90%;
-    max-width: 500px; /* Limits max width for better readability */
-    background: white;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.1);
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     text-align: center;
+    backdrop-filter: blur(10px);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 h1 {
-    color: #ff4757;
+    color: white;
+    font-size: 2rem;
     margin-bottom: 20px;
-    font-size: 1.8rem;
 }
 
-/* Team display styling */
+/* Grid Layout for Teams */
+#teams-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+/* Team Box Styling */
 .team {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, #ff9ff3, #ff6b6b);
+    background: rgba(255, 255, 255, 0.2);
     color: white;
     padding: 15px;
-    border-radius: 8px;
-    margin: 10px 0;
-    transition: all 0.3s ease-in-out;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s, background 0.3s;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
 }
 
+.team:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Team Name & Score */
 .team span {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: bold;
+    margin-bottom: 8px;
 }
 
-/* Button styling */
+/* Buttons */
 button {
-    padding: 10px 15px;
-    margin: 0 5px;
+    padding: 8px 12px;
+    margin: 5px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
-    transition: 0.2s ease-in-out;
+    transition: 0.2s;
 }
 
 .increment {
-    background: #2ed573;
-    color: white;
+    background: #00ff7f;
+    color: black;
 }
 
 .increment:hover {
-    background: #1eaa55;
+    background: #00cc66;
 }
 
 .decrement {
@@ -85,60 +107,44 @@ button {
     background: #e84142;
 }
 
-/* Responsive Styling */
+/* Responsive Design */
 @media (max-width: 768px) {
-    .container {
-        width: 95%;
-        padding: 15px;
+    #teams-container {
+        grid-template-columns: repeat(2, 1fr);
     }
+}
 
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    .team {
-        flex-direction: column;
-        text-align: center;
-        padding: 10px;
-    }
-
-    .team span {
-        font-size: 1rem;
-        margin-bottom: 5px;
-    }
-
-    button {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-        margin: 5px;
+@media (max-width: 480px) {
+    #teams-container {
+        grid-template-columns: repeat(1, 1fr);
     }
 }
 </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏆 Team Scoreboard 🏆</h1>
+        <h1>🏆 Squid Game Scoreboard 🏆</h1>
         <div id="teams-container"></div>
     </div>
     <script>
-// Team data
-let teams = Array.from({ length: 9 }, (_, i) => ({ id: i + 1, score: 0 }));
+// Load scores from local storage
+let teams = JSON.parse(localStorage.getItem('teams')) || Array.from({ length: 9 }, (_, i) => ({ id: i + 1, score: 0 }));
 
 // Function to update and render teams
 function updateTeams() {
-    // Sort teams in descending order of scores
+    // Sort teams by score (Descending)
     teams.sort((a, b) => b.score - a.score);
     
     // Get container
     const container = document.getElementById('teams-container');
     container.innerHTML = "";
 
-    // Loop through sorted teams and create UI
+    // Loop through teams and create UI
     teams.forEach(team => {
         const teamDiv = document.createElement('div');
         teamDiv.classList.add('team');
         teamDiv.innerHTML = `
-            <span>Team ${team.id}</span>
+            <span>🔺 Team ${team.id}</span>
             <span>Score: ${team.score}</span>
             <div>
                 <button class="increment" onclick="changeScore(${team.id}, 1)">➕</button>
@@ -147,6 +153,9 @@ function updateTeams() {
         `;
         container.appendChild(teamDiv);
     });
+
+    // Save to local storage
+    localStorage.setItem('teams', JSON.stringify(teams));
 }
 
 // Function to change score
@@ -163,3 +172,5 @@ updateTeams();
 </script>
 </body>
 </html>
+
+
